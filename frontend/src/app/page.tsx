@@ -217,7 +217,7 @@ export default function Home() {
           {appData.analysis?.correlations && appData.analysis.correlations.length > 0 && (
             <CorrelationHeatmap 
               correlations={appData.analysis.correlations} 
-              numericCols={appData.summary?.numeric_columns || []} 
+              numericCols={appData.summary?.numericColumns || []} 
             />
           )}
 
