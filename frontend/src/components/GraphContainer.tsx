@@ -31,6 +31,13 @@ export default function GraphContainer({ type, data, xKey, yKey, title }: GraphP
 
   const activeYKey = yKey || "";
 
+  const truncateLabel = (label: string) => {
+    if (label.length > 12) {
+      return `${label.substring(0, 4)}...${label.substring(label.length - 4)}`;
+    }
+    return label;
+  };
+
   const renderChart = () => {
     if (!data || data.length === 0) return null;
 
@@ -94,6 +101,7 @@ export default function GraphContainer({ type, data, xKey, yKey, title }: GraphP
       case 'pie':
         const pieData = data.slice(0, 10).map(item => ({ 
           name: String(item[xKey]), 
+          displayLabel: truncateLabel(String(item[xKey])),
           value: Number(item[activeYKey]) || 0 
         }));
         return (
@@ -104,8 +112,9 @@ export default function GraphContainer({ type, data, xKey, yKey, title }: GraphP
               cy="50%"
               innerRadius={60}
               outerRadius={80}
-              paddingAngle={5}
+              paddingAngle={2}
               dataKey="value"
+              nameKey="displayLabel"
             >
               {pieData.map((_, index) => (
                 <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
@@ -115,7 +124,7 @@ export default function GraphContainer({ type, data, xKey, yKey, title }: GraphP
               contentStyle={{ backgroundColor: isDark ? '#0f172a' : '#fff', borderColor: chartColors.grid, color: isDark ? '#fff' : '#000' }}
               itemStyle={{ color: isDark ? '#fff' : '#000' }}
             />
-            <Legend />
+            <Legend verticalAlign="bottom" height={36} />
           </PieChart>
         );
       case 'radar':
@@ -134,7 +143,7 @@ export default function GraphContainer({ type, data, xKey, yKey, title }: GraphP
         );
       case 'treemap':
         const treeData = data.slice(0, 20).map(item => ({
-          name: String(item[xKey]),
+          name: truncateLabel(String(item[xKey])),
           size: Number(item[activeYKey]) || 1,
         }));
         return (
