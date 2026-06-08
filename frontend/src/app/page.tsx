@@ -7,6 +7,7 @@ import DataPreview from '@/components/DataPreview';
 import ThemeToggle from '@/components/ThemeToggle';
 import StatsSummary from '@/components/StatsSummary';
 import CorrelationHeatmap from '@/components/CorrelationHeatmap';
+import DataWrangler from '@/components/DataWrangler';
 import { AppData, GraphType } from '@/types';
 import { BarChart3, Settings2, Database, LayoutDashboard, FileText, Download } from 'lucide-react';
 
@@ -19,6 +20,10 @@ export default function Home() {
 
   const handleUploadSuccess = (data: AppData) => {
     setAppData(data);
+  };
+
+  const handleDataUpdate = (update: Partial<AppData>) => {
+    setAppData(prev => prev ? { ...prev, ...update } : null);
   };
 
   if (!appData) {
@@ -148,6 +153,12 @@ export default function Home() {
               ))}
             </div>
           </section>
+
+          <DataWrangler 
+            session_id={appData.session_id} 
+            summary={appData.summary} 
+            onUpdate={handleDataUpdate} 
+          />
 
           <section className="p-6 bg-card rounded-xl shadow-sm border border-border space-y-4">
             <div className="flex items-center gap-2 mb-2">
